@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CR Movies - Login</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    background-color: #121212;
+    color: #ddd;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  /* Intro Screen */
+  #intro {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #1e2a38 0%, #283a4e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0099ff;
+    font-weight: 900;
+    font-size: 6rem;
+    letter-spacing: 0.35em;
+    user-select: none;
+    animation: fadeIntro 5s forwards;
+    z-index: 9999;
+  }
+  #intro span {
+    display: inline-block;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  #intro span:nth-child(odd) { animation-delay: 0s; }
+  #intro span:nth-child(even) { animation-delay: 0.75s; }
+  @keyframes pulse {
+    0%, 100% {opacity: 1;}
+    50% {opacity: 0.3;}
+  }
+  @keyframes fadeIntro {
+    0% {opacity: 0;}
+    10% {opacity: 1;}
+    80% {opacity: 1;}
+    100% {opacity: 0; visibility: hidden;}
+  }
+  /* Login Screen */
+  #login-screen {
+    height: 100vh;
+    background: linear-gradient(135deg, #283a4e 0%, #1e2a38 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+  }
+  .login-container {
+    background: #1f2937;
+    padding: 40px 40px 50px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 25px rgba(0, 153, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+    transition:
+      clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 1.2s ease,
+      border-radius 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: clip-path, transform, box-shadow, border-radius;
+    transform-origin: center center;
+  }
+  /* Morph effect */
+  .login-container.morph {
+    clip-path: circle(40px at center);
+    border-radius: 50%;
+    padding: 0;
+    box-shadow: 0 0 60px 30px #0099ff;
+    transform: scale(1);
+  }
+  .login-container.expand {
+    clip-path: circle(150vw at center);
+    transform: scale(1.15);
+    box-shadow: none;
+    border-radius: 0;
+  }
+  /* Fade out form content */
+  .login-container.morph form,
+  .login-container.morph h1,
+  .login-container.morph .login-footer {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .login-container form,
+  .login-container h1,
+  .login-container .login-footer {
+    transition: opacity 0.3s ease;
+  }
+  .login-container h1 {
+    color: #0099ff;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    letter-spacing: 0.15em;
+  }
+  .form-control {
+    background-color: #121f2f;
+    border: none;
+    border-radius: 4px;
+    color: #ddd;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .form-control:focus {
+    background-color: #162c45;
+    outline: none;
+    box-shadow: 0 0 8px #0099ff;
+    color: #fff;
+  }
+  .btn-login {
+    background-color: #0099ff;
+    border: none;
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: #121f2f;
+  }
+  .btn-login:hover {
+    background-color: #007acc;
+  }
+  .login-footer {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #aaa;
+    text-align: center;
+  }
+  .login-footer a {
+    color: #0099ff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .login-footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Optional: overlay fade behind morph */
+  #fade-overlay {
+    position: fixed;
+    inset: 0;
+    background: #121212;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    z-index: 1000;
+  }
+  #fade-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- Intro -->
+<div id="intro" aria-label="Intro animation showing CR Movies logo">
+  <span>C</span><span>R</span> <span>M</span><span>O</span><span>V</span><span>I</span><span>E</span><span>S</span>
+</div>
+
+<!-- Login -->
+<div id="login-screen" aria-label="Login form for CR Movies" tabindex="-1">
+  <div class="login-container shadow-lg" id="login-container">
+    <h1>Sign In</h1>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email or phone number" class="form-control" required autocomplete="username" />
+      <input type="password" id="password" placeholder="Password" class="form-control" required autocomplete="current-password" />
+      <button type="submit" class="btn-login">Sign In</button>
+    </form>
+    <div class="login-footer">
+      New to CR Movies? <a href="#">Sign up now.</a>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay for fade -->
+<div id="fade-overlay"></div>
+
+<script>
+  // Show login after intro ends
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('login-screen').focus();
+    }, 5000);
+  });
+
+  // Morphing animation after login
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const container = document.getElementById('login-container');
+    const overlay = document.getElementById('fade-overlay');
+
+    overlay.classList.add('active');
+    container.classList.add('morph');
+
+    setTimeout(() => {
+      container.classList.add('expand');
+    }, 1000);
+
+    // ✅ Redirect after animation ends
+    setTimeout(() => {
+  window.location.href = "file:///C:/Users/Rithika/OneDrive/Desktop/movie/moviehome.html";  // ✅ if in same folder
+}, 3000);
+
+  });
+</script>
+
+</body>
+</html>
